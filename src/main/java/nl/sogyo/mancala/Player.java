@@ -14,7 +14,11 @@ public class Player {
 		this.opponent = player;
 	}
 	
-	Player getOpponent(){
+	Player getOpponent() {
 		return this.opponent;
-	}	
+	}
+	
+	boolean getMyTurn() {
+		return this.myTurn;
+	}
 }

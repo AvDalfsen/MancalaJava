@@ -17,7 +17,7 @@ public class KalahaTest {
 	
 	@Test
 	public void assertKalahaNotBowlType() {		
-		Class expected = testBowl.findNextKalaha().getNeighbour().findNextKalaha().getClass();
+		Class expected = testBowl.findNextKalaha().getClass();
 		Class actual = testBowl.getClass();
 		assertNotEquals("Kalaha and bowl should be two different classes", expected, actual);
 	}
@@ -39,7 +39,7 @@ public class KalahaTest {
 	@Test
 	public void findKalahaTest() {
 		Kalaha expected = testBowl.findNextKalaha();
-		Kalaha actual = testBowl.getNeighbour().getNeighbour().getNeighbour().getNeighbour().getNeighbour().getNeighbour();
+		Kalaha actual = testBowl.findBowl(7);
 		assertEquals("The kalaha should be findable as the 6th neighbour over of the first bowl", expected, actual);
 	}
 	
@@ -48,5 +48,12 @@ public class KalahaTest {
 		Player expected = testBowl.findNextKalaha().getNeighbour().getOwner().getOpponent();
 		Player actual = testBowl.owner;
 		assertEquals("The owner of the first bowl should be the opponent of the kalaha's neighbour's owner", expected, actual);
+	}
+	
+	@Test
+	public void findBowlTest() {
+		Kalaha expected = testBowl.findBowl(4);
+		Kalaha actual = testBowl.getNeighbour().getNeighbour().getNeighbour();
+		assertEquals("The 2nd bowl should match the neighbour of the first bowl", expected, actual);
 	}
 }
