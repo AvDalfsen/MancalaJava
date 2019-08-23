@@ -7,8 +7,11 @@ import org.junit.Test;
 public class PlayerTest {
 
 	@Test
-	public void test() {
-		fail("Not yet implemented");
+	public void findOpponentTest() {
+		Player testPlayer = new Player();
+		Player expected = testPlayer.getOpponent().opponent;
+		Player actual = testPlayer;
+		assertEquals("Player object's opponent's opponent should match the player object", expected, actual);
 	}
-
+	
 }
