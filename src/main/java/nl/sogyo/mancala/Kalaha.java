@@ -4,12 +4,12 @@ public class Kalaha {
 	protected int noOfStones;
 	protected Player owner;
 	protected Kalaha neighbour;
-	protected Kalaha firstBowl;
+	protected Bowl firstBowl;
 	
 	public Kalaha(Player player) {
 	}
 	
-	public Kalaha(Player player, int count, Kalaha firstBowl) {
+	public Kalaha(Player player, int count, Bowl firstBowl) {
 		this.noOfStones = 0;
 		this.owner = player;
 		player = owner.getOpponent();
@@ -37,40 +37,24 @@ public class Kalaha {
 		return this;
 	}
 	
-	public Kalaha findBowl(int bowlNumber) {
-		Kalaha currentBowl = firstBowl;
-		for(int i = 1; i < bowlNumber; i++) {
-			currentBowl = currentBowl.getNeighbour();
-		}
-		return currentBowl;
-	}
-	
 	public void passOnStones(Kalaha currentBowl, int stonesToPassOn) {
-		if (currentBowl.getClass() == Kalaha.class && currentBowl.getOwner().myTurn == true) {
+		if (currentBowl.getOwner().myTurn == true) {
 			currentBowl.noOfStones = currentBowl.noOfStones + 1;
-			checkEndOfPass(currentBowl, --stonesToPassOn);
+			checkEndOfPass(currentBowl, --stonesToPassOn, false);
 		}
-		else if (currentBowl.getClass() == Kalaha.class && currentBowl.getOwner().myTurn == false) {
-			checkEndOfPass(currentBowl, --stonesToPassOn);
-		}
-		else {
-			currentBowl.noOfStones++;
-			checkEndOfPass(currentBowl, --stonesToPassOn);
+		else if (currentBowl.getOwner().myTurn == false) {
+			checkEndOfPass(currentBowl, --stonesToPassOn, false);
 		}
 	}
 	
-	public void checkEndOfPass(Kalaha currentBowl, int stonesToPassOn) {
-		if (stonesToPassOn != 0 && currentBowl.getOwner().getMyTurn() == true) {
+	public void checkEndOfPass(Kalaha currentBowl, int stonesToPassOn, Boolean finalBowlEmpty) {
+		if (stonesToPassOn != 0) {
 			passOnStones(currentBowl.getNeighbour(), stonesToPassOn);
 		}
-		else if (stonesToPassOn == 0 && currentBowl.getClass() == Kalaha.class && currentBowl.getOwner().getMyTurn() == true) {
+		else if (stonesToPassOn == 0 && currentBowl.getOwner().getMyTurn() == true) {
 			return; //What kind of statement/return should be given to indicate the player can do another move? Or is that front end? 
 		}
-		else if (stonesToPassOn == 0 && currentBowl.getOwner().getMyTurn() == true) {
-			//check if can steal -- need to keep track of whether the bowl was empty before passing
-			changeTurn(currentBowl.getOwner());
-		}
-		else if (stonesToPassOn == 0 && currentBowl.getOwner().getMyTurn() == false) { //Is this one necessary? Isn't is the only other option left?
+		else {
 			changeTurn(currentBowl.getOwner());
 		}
 	}

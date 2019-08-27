@@ -1,8 +1,7 @@
 package nl.sogyo.mancala;
 
 import static org.junit.Assert.*;
-
-import org.junit.Test;
+import org.junit.*;
 
 public class PlayerTest {
 

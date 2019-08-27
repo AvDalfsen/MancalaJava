@@ -2,11 +2,17 @@ package nl.sogyo.mancala;
 
 import static org.junit.Assert.*;
 
-import org.junit.Test;
+import org.junit.*;
 
 public class KalahaTest {
-	Player testPlayer = new Player();
-	Kalaha testBowl = new Bowl(testPlayer);
+	Bowl testBowl;
+	Player testPlayer;
+	
+	@Before
+	public void setUp() {
+		testPlayer = new Player();
+		testBowl = new Bowl(testPlayer);
+	}
 	
 	@Test
 	public void assertKalahaNotBowl() {		
@@ -36,11 +42,11 @@ public class KalahaTest {
 		assertEquals("There should be two different kalahas", expected, actual);
 	}
 	
-	@Test
-	public void findKalahaTest() {
+	@Test(expected = Exception.class)
+	public void findBowlKalahaTest() throws Exception {
 		Kalaha expected = testBowl.findNextKalaha();
-		Kalaha actual = testBowl.findBowl(7);
-		assertEquals("The kalaha should be findable as the 6th neighbour over of the first bowl", expected, actual);
+		Kalaha actual = ((Bowl) testBowl).findBowl(7);
+		assertEquals("The findBowl function should not be able to return a kalaha", expected, actual);
 	}
 	
 	@Test
@@ -48,12 +54,5 @@ public class KalahaTest {
 		Player expected = testBowl.findNextKalaha().getNeighbour().getOwner().getOpponent();
 		Player actual = testBowl.owner;
 		assertEquals("The owner of the first bowl should be the opponent of the kalaha's neighbour's owner", expected, actual);
-	}
-	
-	@Test
-	public void findBowlTest() {
-		Kalaha expected = testBowl.findBowl(4);
-		Kalaha actual = testBowl.getNeighbour().getNeighbour().getNeighbour();
-		assertEquals("The 2nd bowl should match the neighbour of the first bowl", expected, actual);
 	}
 }
