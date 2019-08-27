@@ -46,7 +46,7 @@ public class BowlTest {
 	public void makeMoveFunctionEndTest() throws Exception {
 		testBowl.makeMove();
 		int expected = 4;
-		int actual = testBowl.findBowl(6, testBowl).noOfStones;
+		int actual = testBowl.findBowl(6).noOfStones;
 		assertEquals("The 6th bowl should not have gotten an extra stone", expected, actual);
 	}
 	
@@ -54,8 +54,13 @@ public class BowlTest {
 	public void makeMoveFunctionLastBowlTest() throws Exception {
 		testBowl.makeMove();
 		int expected = 5;
-		int actual = testBowl.findBowl(5, testBowl).noOfStones;
+		int actual = testBowl.findBowl(5).noOfStones;
 		assertEquals("The 5th bowl should be the last to have gotten an extra stone", expected, actual);
+	}
+
+	@Test(expected = Exception.class)
+	public void makeMoveOnOpponentBowlTest() throws Exception {
+		testBowl.findBowl(12).makeMove();
 	}
 	
 	@Test
@@ -82,54 +87,54 @@ public class BowlTest {
 	}
 	
 	@Test
-	public void findOppositeBowlFromFirstBowlTest() {
+	public void findOppositeBowlFromFirstBowlTest() throws IndexOutOfBoundsException {
 		Bowl expected = testBowl.findOppositeBowl();
-		Bowl actual = testBowl.findBowl(13, testBowl);
+		Kalaha actual = testBowl.findBowl(13);
 		assertEquals("The opposite bowl of the first bowl should be the 13th bowl", expected, actual);
 	}
 
 	@Test
-	public void findOppositeBowlFromLastBowlTest() {
-		Bowl expected = testBowl.findBowl(13, testBowl).findOppositeBowl();
+	public void findOppositeBowlFromLastBowlTest() throws IndexOutOfBoundsException {
+		Bowl expected = testBowl.findBowl(13).findOppositeBowl();
 		Bowl actual = testBowl;
 		assertEquals("The opposite bowl of the first bowl should be the 13th bowl", expected, actual);
 	}
 	
 	@Test
-	public void findOppositeBowlFromAnyBowlTest() {
-		Bowl expected = testBowl.findBowl(4, testBowl).findOppositeBowl();
-		Bowl actual = testBowl.findBowl(10, testBowl);
+	public void findOppositeBowlFromAnyBowlTest() throws IndexOutOfBoundsException {
+		Bowl expected = testBowl.findBowl(4).findOppositeBowl();
+		Kalaha actual = testBowl.findBowl(10);
 		assertEquals("The opposite bowl of the fourth bowl should be the tenth bowl", expected, actual);
 	}
 	
 	@Test
 	public void findBowlTest() {
-		Bowl expected = testBowl.findBowl(4, testBowl);
+		Kalaha expected = testBowl.findBowl(4);
 		Kalaha actual = testBowl.neighbour.neighbour.neighbour;
 		assertEquals("The 2nd bowl should match the neighbour of the first bowl", expected, actual);
 	}
 	
 	@Test
 	public void stealTestFinalBowl() throws Exception {
-		testBowl.findBowl(5, testBowl).noOfStones = 0;
+		testBowl.findBowl(5).noOfStones = 0;
 		testBowl.makeMove();
 		int expected = 0;
-		int actual = testBowl.findBowl(5, testBowl).noOfStones;
+		int actual = testBowl.findBowl(5).noOfStones;
 		assertEquals("After a steal the number of stones in the final bowl to receive a stone should be 0", expected, actual);
 	}
 	
 	@Test
 	public void stealTestOppositeBowl() throws Exception {
-		testBowl.findBowl(5, testBowl).noOfStones = 0;
+		testBowl.findBowl(5).noOfStones = 0;
 		testBowl.makeMove();
 		int expected = 0;
-		int actual = testBowl.findBowl(9, testBowl).noOfStones;
+		int actual = testBowl.findBowl(9).noOfStones;
 		assertEquals("After a steal the number of stones in the opposite bowl of the final bowl to receive a stone should be 0", expected, actual);
 	}
 	
 	@Test
-	public void stealTestKalaha() throws Exception {
-		testBowl.findBowl(5, testBowl).noOfStones = 0;
+	public void stealTestKalaha() throws Exception  {
+		testBowl.findBowl(5).noOfStones = 0;
 		testBowl.makeMove();
 		int expected = 5;
 		int actual = testBowl.findNextKalaha().noOfStones;
@@ -143,7 +148,7 @@ public class BowlTest {
 
 	@Test
 	public void kalahaStateAfterMove() throws Exception {
-		testBowl.findBowl(5, testBowl).makeMove();
+		testBowl.findBowl(5).makeMove();
 		int expected = 1;
 		int actual = testBowl.findNextKalaha().noOfStones;
 		assertEquals("The kalaha should get one stone after a move has been made and it gets passed", expected, actual);

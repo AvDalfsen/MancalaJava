@@ -26,10 +26,9 @@ public class Bowl extends Kalaha {
 
 	@Override
 	public void makeMove() throws Exception {
-		if(this.owner.myTurn == true && this.noOfStones > 0) {
+		if(this.owner.myTurn && this.noOfStones > 0) {
 			this.neighbour.receive(this.noOfStones);
 			this.empty();
-			return;
 		}
 		else {
 			throw new Exception("The player tried to play on an empty bowl.");
@@ -38,38 +37,21 @@ public class Bowl extends Kalaha {
 
 	@Override
 	void receive(int stones){
-		if(owner.myTurn == true && stones == 1 && isCurrentBowlEmpty()) this.steal();
+		if(owner.myTurn && stones == 1 && isCurrentBowlEmpty()) this.steal();
 		else {
 			this.noOfStones++;
 			passOn(--stones);
 		}
 	}
 
-	void empty() {
+	private void empty() {
 		this.noOfStones = 0;
-		return;
 	}
 	
-	Boolean isCurrentBowlEmpty() {
-		if(this.noOfStones == 0) return true;
-		else return false;
+	private Boolean isCurrentBowlEmpty() {
+		return this.noOfStones == 0;
 	}
 
-	int stepsToKalaha(Bowl source, int sourceId, int nextKalahaId, int steps) {
-		Bowl currentBowl = source;
-		if(sourceId + 1 != nextKalahaId) {
-			currentBowl = (Bowl) currentBowl.neighbour;
-			return currentBowl.stepsToKalaha(currentBowl, currentBowl.id, nextKalahaId, ++steps);
-		}
-		return steps + 1;
-	}
-
-	Bowl findOppositeBowl() {
-		int steps = this.stepsToKalaha(this, this.id, this.findNextKalaha().id, 0);
-		Kalaha start = this.findNextKalaha().neighbour;
-		Bowl oppositeBowl = ((Bowl) start).stepToOppositeBowl(steps - 1, (Bowl) start);
-		return oppositeBowl;
-	}
 
 	Bowl stepToOppositeBowl(int steps, Bowl currentBowl) {
 		if(currentBowl.id != currentBowl.id + steps){
@@ -78,14 +60,14 @@ public class Bowl extends Kalaha {
 		return currentBowl;
 	}
 	
-	void steal() {
+	private void steal() {
 		int totalStones = 1 + this.findOppositeBowl().stealEmpty(this.findOppositeBowl());
 		this.noOfStones = 0;
 		this.findNextKalaha().noOfStones = this.findNextKalaha().noOfStones + totalStones;
 		this.owner.changeTurn();
 	}
 	
-	int stealEmpty(Bowl stealTarget) {
+	private int stealEmpty(Bowl stealTarget) {
 		int stolenStones = stealTarget.noOfStones;
 		stealTarget.noOfStones = 0;
 		return stolenStones;

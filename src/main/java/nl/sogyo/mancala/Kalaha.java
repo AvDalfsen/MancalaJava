@@ -23,32 +23,86 @@ public class Kalaha {
 		return this;
 	}
 
-	Bowl findBowl(int bowlNumber, Kalaha targetBowl) {
-		if(targetBowl.id != bowlNumber) {
-			targetBowl = targetBowl.neighbour;
-			return findBowl(bowlNumber, targetBowl);
+	Kalaha findBowl(int id) throws IndexOutOfBoundsException  {
+		if(id < 1 || id > 14){
+			return null;
 		}
-		return ((Bowl) targetBowl);
+		Kalaha current = this;
+		if(id != current.id){
+			return current.neighbour.findBowl(id);
+		}
+		return current;
 	}
-	//TODO met je kut hoofd fix die shit yo
+
+	Bowl findOppositeBowl() {
+		int steps = this.stepsToKalaha(this, this.id, this.findNextKalaha().id, 0);
+		Kalaha start = this.findNextKalaha().neighbour;
+		return ((Bowl) start).stepToOppositeBowl(steps - 1, (Bowl) start);
+	}
+
+	int stepsToKalaha(Kalaha source, int sourceId, int nextKalahaId, int steps) {
+		Kalaha currentBowl = source;
+		if(sourceId + 1 != nextKalahaId) {
+			currentBowl = currentBowl.neighbour;
+			return currentBowl.stepsToKalaha(currentBowl, currentBowl.id, nextKalahaId, ++steps);
+		}
+		return steps + 1;
+	}
 
 	public void makeMove() throws Exception {
 		throw new Exception("The player tried to play on a bowl that was not theirs or on a kalaha.");
 	}
 
 	void receive(int stones){
-		if(this.owner.myTurn == true){
+		if(this.owner.myTurn){
 			this.noOfStones++;
 			passOn(--stones);
 		}
-		else{
-			this.noOfStones++;
-			passOn(--stones);
+		else passOn(stones);
+	}
+
+	void passOn(int stones){
+		if(stones > 0) neighbour.receive(stones);
+		else this.owner.changeTurn();
+	}
+
+	void checkEndGame() {
+		boolean player1 = false;
+		boolean player2 = false;
+
+	}
+
+	private boolean assertPlayableBowls() {
+		boolean player1 = false;
+		boolean player2 = false;
+		if(currentBowl.id < 7) {
+			player1 = checkPlayableBowlsPlayer1(currentBowl);
+		}
+		else if (currentBowl.id > 7 && currentBowl.id < 13) {
+			player2 = checkPlayableBowlsPlayer2(currentBowl);
 		}
 	}
 
-	public void passOn(int stones){
-		if(stones > 0) neighbour.receive(stones);
-		else this.owner.changeTurn();
+	private boolean checkPlayableBowlsPlayer1(Kalaha currentBowl) {
+		if(currentBowl.noOfStones == 0) {
+			currentBowl = currentBowl.neighbour;
+			return checkPlayableBowlsPlayer1(currentBowl);
+		}
+		return true;
+	}
+
+	private boolean checkPlayableBowlsPlayer2(Kalaha currentBowl) {
+		if(currentBowl.noOfStones == 0) {
+			currentBowl = currentBowl.neighbour;
+			return checkPlayableBowlsPlayer2(currentBowl);
+		}
+		return true;
+	}
+
+	void tallyScores(Kalaha currentBowl) {
+		if(currentBowl.id < 14) {
+			currentBowl.owner.finalScore = currentBowl.owner.finalScore + currentBowl.noOfStones;
+			currentBowl.tallyScores(currentBowl.neighbour);
+		}
 	}
 }

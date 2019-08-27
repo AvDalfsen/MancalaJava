@@ -41,13 +41,6 @@ public class KalahaTest {
 		Class actual = testBowl.findNextKalaha().getClass();
 		assertEquals("There should be two different kalahas", expected, actual);
 	}
-	
-	@Test(expected = Exception.class)
-	public void findBowlKalahaTest() throws Exception {
-		Kalaha expected = testBowl.findNextKalaha();
-		Kalaha actual = ((Bowl) testBowl).findBowl(7, testBowl);
-		assertEquals("The findBowl function should not be able to return a kalaha", expected, actual);
-	}
 
 	@Test(expected = Exception.class)
 	public void makeMoveOnKalahaTest() throws Exception {
@@ -59,5 +52,36 @@ public class KalahaTest {
 		Player expected = testBowl.findNextKalaha().neighbour.owner.opponent;
 		Player actual = testBowl.owner;
 		assertEquals("The owner of the first bowl should be the opponent of the kalaha's neighbour's owner", expected, actual);
+	}
+
+	@Test
+	public void kalahaPassTest() throws Exception {
+		testBowl.findBowl(5).noOfStones = 10;
+		testBowl.findBowl(5).makeMove();
+		int expected = 0;
+		int actual = testBowl.findBowl(14).noOfStones;
+		assertEquals("After having been passed during the player's turn, the opponent's kalaha should not receive a stone", expected, actual);
+	}
+
+	@Test
+	public void outOfBoundsFindBowlNumberTest() {
+		Kalaha expected = testBowl.findBowl(20);
+		assertEquals("FindBowl() called with out of bounds number should return null", expected, null);
+	}
+
+	@Test
+	public void finalCountTestPlayer1() {
+		testBowl.tallyScores(testBowl);
+		int expected = testBowl.owner.finalScore;
+		int actual = 24;
+		assertEquals("Without having made a move, the final score for the first player should be 24", expected, actual);
+	}
+
+	@Test
+	public void finalCountTestPlayer2() {
+		testBowl.tallyScores(testBowl);
+		int expected = testBowl.findBowl(10).owner.finalScore;
+		int actual = 24;
+		assertEquals("Without having made a move, the final score for the first player should be 24", expected, actual);
 	}
 }
