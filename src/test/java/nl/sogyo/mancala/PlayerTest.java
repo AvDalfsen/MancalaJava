@@ -8,7 +8,7 @@ public class PlayerTest {
 	@Test
 	public void findOpponentTest() {
 		Player testPlayer = new Player();
-		Player expected = testPlayer.getOpponent().opponent;
+		Player expected = testPlayer.opponent.opponent;
 		Player actual = testPlayer;
 		assertEquals("Player object's opponent's opponent should match the player object", expected, actual);
 	}

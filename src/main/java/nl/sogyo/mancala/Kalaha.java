@@ -1,66 +1,54 @@
 package nl.sogyo.mancala;
 
 public class Kalaha {
-	protected int noOfStones;
-	protected Player owner;
-	protected Kalaha neighbour;
-	protected Bowl firstBowl;
+	int noOfStones;
+	int id;
+	Player owner;
+	Kalaha neighbour;
+	Bowl firstBowl;
 	
-	public Kalaha(Player player) {
+	Kalaha(Player player) {
 	}
 	
-	public Kalaha(Player player, int count, Bowl firstBowl) {
+	Kalaha(Player player, int count, int id, Bowl firstBowl) {
 		this.noOfStones = 0;
 		this.owner = player;
-		player = owner.getOpponent();
-		if(count == 7) {
-			this.neighbour = new Bowl(player, ++count, firstBowl);
-		}
-		else {
-			this.neighbour = firstBowl;
-		}
+		this.id = id;
+		player = owner.opponent;
+		if(count == 7) this.neighbour = new Bowl(player, ++count, ++id, firstBowl);
+		else this.neighbour = firstBowl;
 	}
-	
-	public Player getOwner() {
-		return this.owner;
-	}
-	
-	public Kalaha getNeighbour() {
-		return this.neighbour;
-	}
-	
-	public int getNoOfStones() {
-		return this.noOfStones;
-	}
-	
+
 	public Kalaha findNextKalaha() {
 		return this;
 	}
-	
-	public void passOnStones(Kalaha currentBowl, int stonesToPassOn) {
-		if (currentBowl.getOwner().myTurn == true) {
-			currentBowl.noOfStones = currentBowl.noOfStones + 1;
-			checkEndOfPass(currentBowl, --stonesToPassOn, false);
+
+	Bowl findBowl(int bowlNumber, Kalaha targetBowl) {
+		if(targetBowl.id != bowlNumber) {
+			targetBowl = targetBowl.neighbour;
+			return findBowl(bowlNumber, targetBowl);
 		}
-		else if (currentBowl.getOwner().myTurn == false) {
-			checkEndOfPass(currentBowl, --stonesToPassOn, false);
+		return ((Bowl) targetBowl);
+	}
+	//TODO met je kut hoofd fix die shit yo
+
+	public void makeMove() throws Exception {
+		throw new Exception("The player tried to play on a bowl that was not theirs or on a kalaha.");
+	}
+
+	void receive(int stones){
+		if(this.owner.myTurn == true){
+			this.noOfStones++;
+			passOn(--stones);
+		}
+		else{
+			this.noOfStones++;
+			passOn(--stones);
 		}
 	}
-	
-	public void checkEndOfPass(Kalaha currentBowl, int stonesToPassOn, Boolean finalBowlEmpty) {
-		if (stonesToPassOn != 0) {
-			passOnStones(currentBowl.getNeighbour(), stonesToPassOn);
-		}
-		else if (stonesToPassOn == 0 && currentBowl.getOwner().getMyTurn() == true) {
-			return; //What kind of statement/return should be given to indicate the player can do another move? Or is that front end? 
-		}
-		else {
-			changeTurn(currentBowl.getOwner());
-		}
+
+	public void passOn(int stones){
+		if(stones > 0) neighbour.receive(stones);
+		else this.owner.changeTurn();
 	}
-	
-	public void changeTurn(Player player) {
-		player.myTurn = !player.myTurn;
-		player.getOpponent().myTurn = !player.getOpponent().myTurn;
-	}	
 }

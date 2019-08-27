@@ -1,113 +1,93 @@
 package nl.sogyo.mancala;
 
 public class Bowl extends Kalaha {
-	public Bowl(Player player) {
+	Bowl(Player player) {
 		super(player);
 		this.noOfStones = 4;
 		this.owner = player;
+		this.id = 1;
 		firstBowl = this;
-		this.neighbour = new Bowl(player, 2, this);
+		this.neighbour = new Bowl(player, 2, 2, this);
 	}
 	
-	public Bowl(Player player, int count, Bowl firstBowl) {
-		super(player, count, firstBowl);
+	Bowl(Player player, int count, int id, Bowl firstBowl) {
+		super(player, count, id, firstBowl);
 		this.noOfStones = 4;
 		this.owner = player;
-		if(count == 6 || count == 13) {
-			this.neighbour = new Kalaha(player, ++count, firstBowl);
-		}
-		else {
-			this.neighbour = new Bowl(player, ++count, firstBowl);
-		}
+		this.id = id;
+		if(count == 6 || count == 13) this.neighbour = new Kalaha(player, ++count, ++id, firstBowl);
+		else this.neighbour = new Bowl(player, ++count, ++id, firstBowl);
 	}
 	
 	@Override
 	public Kalaha findNextKalaha() {
-		return getNeighbour().findNextKalaha();
-	}
-	
-	public int stepsToKalaha() {
-		int steps = 0;
-		Kalaha currentBowl = this;
-		while (currentBowl instanceof Bowl) {
-			currentBowl = currentBowl.getNeighbour();
-			steps++;
-		}	
-		return steps;
+		return this.neighbour.findNextKalaha();
 	}
 
+	@Override
 	public void makeMove() throws Exception {
-		if (this.getOwner().getMyTurn() == true && this.getClass() != this.findNextKalaha().getClass()) {
-			int stonesToPassOn = this.getNoOfStones();
-			this.noOfStones = 0;
-			passOnStones(this.neighbour, stonesToPassOn);
+		if(this.owner.myTurn == true && this.noOfStones > 0) {
+			this.neighbour.receive(this.noOfStones);
+			this.empty();
+			return;
 		}
 		else {
-			throw new Exception("The player tried to play on a bowl that was not theirs or on a kalaha.");
+			throw new Exception("The player tried to play on an empty bowl.");
 		}
 	}
-	
+
 	@Override
-	public void passOnStones(Kalaha currentBowl, int stonesToPassOn) {
-		Boolean finalBowlEmpty = ((Bowl) currentBowl).isCurrentBowlEmpty();
-		currentBowl.noOfStones++;
-		checkEndOfPass(currentBowl, --stonesToPassOn, finalBowlEmpty);
-	}
-	
-	@Override
-	public void checkEndOfPass(Kalaha currentBowl, int stonesToPassOn, Boolean finalBowlEmpty) {
-		if (stonesToPassOn != 0) {
-			passOnStones(currentBowl.getNeighbour(), stonesToPassOn);
-		}
-		else if (stonesToPassOn == 0 && currentBowl.getOwner().getMyTurn() == true && finalBowlEmpty == true) {
-			((Bowl) currentBowl).steal(((Bowl) currentBowl));
-			changeTurn(currentBowl.getOwner());
-		}
+	void receive(int stones){
+		if(owner.myTurn == true && stones == 1 && isCurrentBowlEmpty()) this.steal();
 		else {
-			changeTurn(currentBowl.getOwner());
+			this.noOfStones++;
+			passOn(--stones);
 		}
 	}
-	
-	public Boolean isCurrentBowlEmpty() {
-		if (this.noOfStones == 0) {
-			return true;
-		}
-		else {
-			return false;	
-		}
+
+	void empty() {
+		this.noOfStones = 0;
+		return;
 	}
 	
-	public Bowl findOppositeBowl() {
-		int steps = this.stepsToKalaha();
-		Kalaha startKalaha = this.findNextKalaha();
-		Kalaha oppositeBowl = startKalaha;
-		for(int i = 0; i < steps; i++) {
-			oppositeBowl = oppositeBowl.getNeighbour();
+	Boolean isCurrentBowlEmpty() {
+		if(this.noOfStones == 0) return true;
+		else return false;
+	}
+
+	int stepsToKalaha(Bowl source, int sourceId, int nextKalahaId, int steps) {
+		Bowl currentBowl = source;
+		if(sourceId + 1 != nextKalahaId) {
+			currentBowl = (Bowl) currentBowl.neighbour;
+			return currentBowl.stepsToKalaha(currentBowl, currentBowl.id, nextKalahaId, ++steps);
 		}
-		return ((Bowl) oppositeBowl);
+		return steps + 1;
+	}
+
+	Bowl findOppositeBowl() {
+		int steps = this.stepsToKalaha(this, this.id, this.findNextKalaha().id, 0);
+		Kalaha start = this.findNextKalaha().neighbour;
+		Bowl oppositeBowl = ((Bowl) start).stepToOppositeBowl(steps - 1, (Bowl) start);
+		return oppositeBowl;
+	}
+
+	Bowl stepToOppositeBowl(int steps, Bowl currentBowl) {
+		if(currentBowl.id != currentBowl.id + steps){
+			return currentBowl.stepToOppositeBowl(--steps, (Bowl) currentBowl.neighbour);
+		}
+		return currentBowl;
 	}
 	
-	public void steal(Bowl currentBowl) {
-		int totalStones = currentBowl.noOfStones + currentBowl.findOppositeBowl().stealEmpty(currentBowl.findOppositeBowl());
-		currentBowl.noOfStones = 0;
-		currentBowl.findNextKalaha().noOfStones = currentBowl.findNextKalaha().noOfStones + totalStones;
-		changeTurn(currentBowl.getOwner());
+	void steal() {
+		int totalStones = 1 + this.findOppositeBowl().stealEmpty(this.findOppositeBowl());
+		this.noOfStones = 0;
+		this.findNextKalaha().noOfStones = this.findNextKalaha().noOfStones + totalStones;
+		this.owner.changeTurn();
 	}
 	
-	public int stealEmpty(Bowl stealTarget) {
+	int stealEmpty(Bowl stealTarget) {
 		int stolenStones = stealTarget.noOfStones;
 		stealTarget.noOfStones = 0;
 		return stolenStones;
-	}
-	
-	public Bowl findBowl(int bowlNumber) throws Exception {
-		Kalaha currentBowl = firstBowl;
-		for(int i = 1; i < bowlNumber; i++) {
-			currentBowl = currentBowl.getNeighbour();
-		}
-		if(currentBowl.getClass() == Kalaha.class) {
-			throw new Exception("The number given directs to a kalaha. Please enter a number directing to a bowl.");
-		}
-		else {return ((Bowl) currentBowl);}
 	}
 }

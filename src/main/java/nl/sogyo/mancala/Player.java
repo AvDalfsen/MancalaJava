@@ -1,8 +1,8 @@
 package nl.sogyo.mancala;
 
-public class Player {
-	protected boolean myTurn;
-	protected Player opponent;
+class Player {
+	boolean myTurn;
+	Player opponent;
 	
 	Player(){
 		this.myTurn = true;
@@ -13,12 +13,9 @@ public class Player {
 		this.myTurn = false;
 		this.opponent = player;
 	}
-	
-	Player getOpponent() {
-		return this.opponent;
-	}
-	
-	boolean getMyTurn() {
-		return this.myTurn;
+
+	void changeTurn() {
+		this.myTurn = !this.myTurn;
+		this.opponent.myTurn = !this.opponent.myTurn;
 	}
 }

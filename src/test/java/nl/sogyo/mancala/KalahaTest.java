@@ -16,8 +16,8 @@ public class KalahaTest {
 	
 	@Test
 	public void assertKalahaNotBowl() {		
-		int expected = testBowl.findNextKalaha().getNoOfStones();
-		int actual = testBowl.getNoOfStones();
+		int expected = testBowl.findNextKalaha().noOfStones;
+		int actual = testBowl.noOfStones;
 		assertNotEquals("A kalaha should start with a different number of stones than a bowl", expected, actual);
 	}
 	
@@ -30,14 +30,14 @@ public class KalahaTest {
 	
 	@Test
 	public void differentKalahas() {
-		Kalaha expected = testBowl.findNextKalaha().getNeighbour().findNextKalaha();
+		Kalaha expected = testBowl.findNextKalaha().neighbour.findNextKalaha();
 		Kalaha actual = testBowl.findNextKalaha();
 		assertNotEquals("There should be two different kalahas", expected, actual);
 	}
 	
 	@Test
 	public void differentKalahasButSameType() {
-		Class expected = testBowl.findNextKalaha().getNeighbour().findNextKalaha().getClass();
+		Class expected = testBowl.findNextKalaha().neighbour.findNextKalaha().getClass();
 		Class actual = testBowl.findNextKalaha().getClass();
 		assertEquals("There should be two different kalahas", expected, actual);
 	}
@@ -45,13 +45,18 @@ public class KalahaTest {
 	@Test(expected = Exception.class)
 	public void findBowlKalahaTest() throws Exception {
 		Kalaha expected = testBowl.findNextKalaha();
-		Kalaha actual = ((Bowl) testBowl).findBowl(7);
+		Kalaha actual = ((Bowl) testBowl).findBowl(7, testBowl);
 		assertEquals("The findBowl function should not be able to return a kalaha", expected, actual);
+	}
+
+	@Test(expected = Exception.class)
+	public void makeMoveOnKalahaTest() throws Exception {
+		testBowl.findNextKalaha().makeMove();
 	}
 	
 	@Test
 	public void neighbourDifferentOwnerTest() {
-		Player expected = testBowl.findNextKalaha().getNeighbour().getOwner().getOpponent();
+		Player expected = testBowl.findNextKalaha().neighbour.owner.opponent;
 		Player actual = testBowl.owner;
 		assertEquals("The owner of the first bowl should be the opponent of the kalaha's neighbour's owner", expected, actual);
 	}
