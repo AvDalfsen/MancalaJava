@@ -5,12 +5,11 @@ import static org.junit.Assert.*;
 import org.junit.*;
 
 public class KalahaTest {
-	Bowl testBowl;
-	Player testPlayer;
-	
+	private Bowl testBowl;
+
 	@Before
 	public void setUp() {
-		testPlayer = new Player();
+		Player testPlayer = new Player();
 		testBowl = new Bowl(testPlayer);
 	}
 	
@@ -66,7 +65,7 @@ public class KalahaTest {
 	@Test
 	public void outOfBoundsFindBowlNumberTest() {
 		Kalaha expected = testBowl.findBowl(20);
-		assertEquals("FindBowl() called with out of bounds number should return null", expected, null);
+		assertNull("FindBowl() called with out of bounds number should return null", expected);
 	}
 
 	@Test
@@ -83,5 +82,26 @@ public class KalahaTest {
 		int expected = testBowl.findBowl(10).owner.finalScore;
 		int actual = 24;
 		assertEquals("Without having made a move, the final score for the first player should be 24", expected, actual);
+	}
+
+	@Test
+	public void endOfGameCheckAfterInitialisationTest() {
+		boolean expected = true;
+		boolean actual = testBowl.checkContinueGame();
+		assertTrue("After initialisation, there should be playable bowls", actual);
+	}
+
+	@Test
+	public void continueGameAfterAllBowlsEmptyTest() throws Exception {
+		testBowl.findBowl(8).noOfStones = 0;
+		testBowl.findBowl(9).noOfStones = 0;
+		testBowl.findBowl(10).noOfStones = 0;
+		testBowl.findBowl(11).noOfStones = 0;
+		testBowl.findBowl(12).noOfStones = 0;
+		testBowl.findBowl(13).noOfStones = 0;
+		testBowl.makeMove();
+		boolean expected = false;
+		boolean actual = testBowl.checkContinueGame();
+		assertFalse("When all bowls of the player are empty, the game should not continue when it becomes his turn", actual);
 	}
 }

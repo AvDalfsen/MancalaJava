@@ -6,15 +6,16 @@ public class Kalaha {
 	Player owner;
 	Kalaha neighbour;
 	Bowl firstBowl;
-	
-	Kalaha(Player player) {
+
+	Kalaha() {
 	}
-	
+
 	Kalaha(Player player, int count, int id, Bowl firstBowl) {
 		this.noOfStones = 0;
 		this.owner = player;
 		this.id = id;
 		player = owner.opponent;
+		this.firstBowl = firstBowl;
 		if(count == 7) this.neighbour = new Bowl(player, ++count, ++id, firstBowl);
 		else this.neighbour = firstBowl;
 	}
@@ -64,37 +65,30 @@ public class Kalaha {
 	void passOn(int stones){
 		if(stones > 0) neighbour.receive(stones);
 		else this.owner.changeTurn();
+		if(!checkContinueGame()) tallyScores(firstBowl);
 	}
 
-	void checkEndGame() {
-		boolean player1 = false;
-		boolean player2 = false;
-
-	}
-
-	private boolean assertPlayableBowls() {
-		boolean player1 = false;
-		boolean player2 = false;
-		if(currentBowl.id < 7) {
-			player1 = checkPlayableBowlsPlayer1(currentBowl);
+	boolean checkContinueGame() {
+		if(firstBowl.owner.myTurn){
+			return assertPlayableBowls(firstBowl, 6, false);
 		}
-		else if (currentBowl.id > 7 && currentBowl.id < 13) {
-			player2 = checkPlayableBowlsPlayer2(currentBowl);
-		}
+		return assertPlayableBowls(firstBowl.findBowl(8), 6, false);
 	}
 
-	private boolean checkPlayableBowlsPlayer1(Kalaha currentBowl) {
-		if(currentBowl.noOfStones == 0) {
-			currentBowl = currentBowl.neighbour;
-			return checkPlayableBowlsPlayer1(currentBowl);
+	private boolean assertPlayableBowls(Kalaha currentBowl, int count, boolean canPlay) {
+		if(count > 0 && !canPlay) {
+			canPlay = checkPlayableBowls(currentBowl);
+			return assertPlayableBowls(currentBowl.neighbour, --count, canPlay);
+		}
+		else if(count == 0 && !canPlay) {
+			return false;
 		}
 		return true;
 	}
 
-	private boolean checkPlayableBowlsPlayer2(Kalaha currentBowl) {
+	private boolean checkPlayableBowls (Kalaha currentBowl) {
 		if(currentBowl.noOfStones == 0) {
-			currentBowl = currentBowl.neighbour;
-			return checkPlayableBowlsPlayer2(currentBowl);
+			return false;
 		}
 		return true;
 	}

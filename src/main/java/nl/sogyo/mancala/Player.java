@@ -11,7 +11,7 @@ class Player {
 		this.opponent = new Player(this);
 	}
 	
-	Player(Player player){
+	private Player(Player player){
 		this.finalScore = 0;
 		this.myTurn = false;
 		this.opponent = player;

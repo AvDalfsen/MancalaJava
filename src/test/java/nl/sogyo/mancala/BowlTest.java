@@ -4,7 +4,7 @@ import static org.junit.Assert.*;
 import org.junit.*;
 
 public class BowlTest {
-	Bowl testBowl;
+	private Bowl testBowl;
 	
 	@Before
 	public void setUp() {
@@ -66,17 +66,15 @@ public class BowlTest {
 	@Test
 	public void changeTurnTestOpponent() throws Exception {
 		testBowl.makeMove();
-		boolean expected = false;
 		boolean actual = testBowl.owner.myTurn;
-		assertEquals("After a move the turn of the player should be set to false", expected, actual);
+		assertFalse("After a move the turn of the player should be set to false", actual);
 	}
 	
 	@Test
 	public void changeTurnTestPlayer() throws Exception {
 		testBowl.makeMove();
-		boolean expected = true;
 		boolean actual = testBowl.owner.opponent.myTurn;
-		assertEquals("After a move the turn of the opponent should be set to true", expected, actual);
+		assertTrue("After a move the turn of the opponent should be set to true", actual);
 	}
 	
 	@Test
