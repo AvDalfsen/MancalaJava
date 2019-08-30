@@ -137,7 +137,6 @@ public class BowlTest {
 		int actual = testBowl.findNextKalaha().noOfStones;
 		assertEquals("After a steal the total number of stones (stolen + 1 final stone triggering the steal) should be added to the kalaha", expected, actual);
 		}
-	}
 
 	@Test
 	public void kalahaStateAfterMove() throws Exception {

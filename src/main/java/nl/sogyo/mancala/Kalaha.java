@@ -64,10 +64,10 @@ public class Kalaha {
 	void passOn(int stones){
 		if(stones > 0) neighbour.receive(stones);
 		else this.owner.changeTurn();
-		if(!checkContinueGame()) tallyScores(this, this.neighbour);
+		if(!checkContinueGame(this.findBowl(1))) tallyScores(this, this.neighbour);
 	}
 
-	boolean checkContinueGame() {
+	boolean checkContinueGame(Kalaha firstBowl) {
 		if(firstBowl.owner.myTurn){
 			return assertPossibleMoves(firstBowl, 6, false);
 		}

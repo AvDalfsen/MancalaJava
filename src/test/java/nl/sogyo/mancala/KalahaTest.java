@@ -86,7 +86,7 @@ public class KalahaTest {
 
 	@Test
 	public void endOfGameCheckAfterInitialisationTest() {
-		boolean actual = testBowl.checkContinueGame();
+		boolean actual = testBowl.checkContinueGame(testBowl);
 		assertTrue("After initialisation, there should be playable bowls", actual);
 	}
 
@@ -99,7 +99,7 @@ public class KalahaTest {
 		testBowl.findBowl(12).noOfStones = 0;
 		testBowl.findBowl(13).noOfStones = 0;
 		testBowl.makeMove();
-		boolean actual = testBowl.checkContinueGame();
+		boolean actual = testBowl.checkContinueGame(testBowl);
 		assertFalse("When all bowls of the player are empty, the game should not continue when it becomes his turn", actual);
 	}
 }

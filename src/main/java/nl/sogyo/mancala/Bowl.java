@@ -6,7 +6,6 @@ public class Bowl extends Kalaha {
 		this.noOfStones = 4;
 		this.owner = player;
 		this.id = 1;
-		firstBowl = this;
 		this.neighbour = new Bowl(player, 2, 2, this);
 	}
 	
