@@ -10,8 +10,7 @@ public class BowlTest {
 	public void setUp() {
 		testBowl = new Bowl(new Player());	
 	}
-	
-	
+
 	@Test
 	public void bowlCreationNoOfStonesTest() {
 		int expected = 4;
@@ -137,10 +136,6 @@ public class BowlTest {
 		int expected = 5;
 		int actual = testBowl.findNextKalaha().noOfStones;
 		assertEquals("After a steal the total number of stones (stolen + 1 final stone triggering the steal) should be added to the kalaha", expected, actual);
-		Kalaha currentbowl = testBowl;
-		for (int i = 0; i < 14; i++){
-			System.out.println(currentbowl.noOfStones + " " + currentbowl.id);
-			currentbowl = currentbowl.neighbour;
 		}
 	}
 

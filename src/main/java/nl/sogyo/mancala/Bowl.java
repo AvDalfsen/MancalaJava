@@ -15,7 +15,7 @@ public class Bowl extends Kalaha {
 		this.noOfStones = 4;
 		this.owner = player;
 		this.id = id;
-		if(count == 6 || count == 13) this.neighbour = new Kalaha(player, ++count, ++id, firstBowl);
+		if(count == 6 ^ count == 13) this.neighbour = new Kalaha(player, ++count, ++id, firstBowl);
 		else this.neighbour = new Bowl(player, ++count, ++id, firstBowl);
 	}
 	
@@ -26,7 +26,7 @@ public class Bowl extends Kalaha {
 
 	@Override
 	public void makeMove() throws Exception {
-		if(this.owner.myTurn && this.noOfStones > 0) {
+		if(this.owner.myTurn & this.noOfStones > 0) {
 			this.neighbour.receive(this.noOfStones);
 			this.empty();
 		}
@@ -37,7 +37,7 @@ public class Bowl extends Kalaha {
 
 	@Override
 	void receive(int stones){
-		if(owner.myTurn && stones == 1 && isCurrentBowlEmpty()) this.steal();
+		if(owner.myTurn & stones == 1 & isCurrentBowlEmpty()) this.steal();
 		else {
 			this.noOfStones++;
 			passOn(--stones);

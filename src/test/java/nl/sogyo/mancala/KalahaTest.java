@@ -70,7 +70,7 @@ public class KalahaTest {
 
 	@Test
 	public void finalCountTestPlayer1() {
-		testBowl.tallyScores(testBowl);
+		testBowl.tallyScores(testBowl, testBowl.neighbour);
 		int expected = testBowl.owner.finalScore;
 		int actual = 24;
 		assertEquals("Without having made a move, the final score for the first player should be 24", expected, actual);
@@ -78,7 +78,7 @@ public class KalahaTest {
 
 	@Test
 	public void finalCountTestPlayer2() {
-		testBowl.tallyScores(testBowl);
+		testBowl.tallyScores(testBowl, testBowl.neighbour);
 		int expected = testBowl.findBowl(10).owner.finalScore;
 		int actual = 24;
 		assertEquals("Without having made a move, the final score for the first player should be 24", expected, actual);
@@ -86,7 +86,6 @@ public class KalahaTest {
 
 	@Test
 	public void endOfGameCheckAfterInitialisationTest() {
-		boolean expected = true;
 		boolean actual = testBowl.checkContinueGame();
 		assertTrue("After initialisation, there should be playable bowls", actual);
 	}
@@ -100,7 +99,6 @@ public class KalahaTest {
 		testBowl.findBowl(12).noOfStones = 0;
 		testBowl.findBowl(13).noOfStones = 0;
 		testBowl.makeMove();
-		boolean expected = false;
 		boolean actual = testBowl.checkContinueGame();
 		assertFalse("When all bowls of the player are empty, the game should not continue when it becomes his turn", actual);
 	}

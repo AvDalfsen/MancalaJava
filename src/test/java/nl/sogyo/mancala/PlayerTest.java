@@ -11,5 +11,4 @@ public class PlayerTest {
 		Player expected = testPlayer.opponent.opponent;
 		assertEquals("Player object's opponent's opponent should match the player object", expected, testPlayer);
 	}
-	
 }
