@@ -51,10 +51,9 @@
     <modelVersion>4.0.0</modelVersion>
     <name>Mancala</name>
 
-    <groupId>${project.groupId}</groupId>
-	<artifactId>${project.artifactId}</artifactId>
-	<version>${project.version}</version>
-	<packaging>${project.packaging}</packaging>
+    <groupId>nl.sogyo.mancala</groupId>
+    <artifactId>mancala</artifactId>
+    <version></version>
 
     <dependencies>
         <dependency>
