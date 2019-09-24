@@ -50,11 +50,6 @@
 	</profiles>
     <modelVersion>4.0.0</modelVersion>
     <name>Mancala</name>
-
-    <groupId>nl.sogyo.mancala</groupId>
-    <artifactId>mancala</artifactId>
-    <version>0.</version>
-
     <dependencies>
         <dependency>
             <groupId>junit</groupId>
