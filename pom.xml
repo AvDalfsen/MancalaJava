@@ -51,10 +51,10 @@
     <modelVersion>4.0.0</modelVersion>
     <name>Mancala</name>
 
-    <groupId></groupId>
-    <artifactId></artifactId>
-    <version></version>
-	<packaging></packaging>
+    <groupId>${project.groupId}</groupId>
+	<artifactId>${project.artifactId}</artifactId>
+	<version>${project.version}</version>
+	<packaging>${project.packaging}</packaging>
 
     <dependencies>
         <dependency>
