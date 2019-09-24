@@ -3,7 +3,7 @@ package nl.sogyo.mancala;
 public class Bowl extends Kalaha {
 	Bowl(Player player) {
 		super();
-		this.noOfStones = 5;
+		this.noOfStones = 4;
 		this.owner = player;
 		this.id = 1;
 		this.neighbour = new Bowl(player, 2, 2, this);
