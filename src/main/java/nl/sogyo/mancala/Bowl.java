@@ -3,7 +3,7 @@ package nl.sogyo.mancala;
 public class Bowl extends Kalaha {
 	Bowl(Player player) {
 		super();
-		this.noOfStones = 4;
+		this.noOfStones = 5;
 		this.owner = player;
 		this.id = 1;
 		this.neighbour = new Bowl(player, 2, 2, this);
@@ -14,8 +14,8 @@ public class Bowl extends Kalaha {
 		this.noOfStones = 4;
 		this.owner = player;
 		this.id = id;
-		if(count == 6 ^ count == 13) this.neighbour = new Kalaha(player, ++count, ++id, firstBowl);
-		else this.neighbour = new Bowl(player, ++count, ++id, firstBowl);
+		if(count == 6 || count == 13) this.neighbour = new Kalaha(player, count + 1, id + 1, firstBowl);
+		else this.neighbour = new Bowl(player, count + 1, id + 1, firstBowl);
 	}
 	
 	@Override
@@ -25,7 +25,7 @@ public class Bowl extends Kalaha {
 
 	@Override
 	public void makeMove() throws Exception {
-		if(this.owner.myTurn & this.noOfStones > 0) {
+		if(this.owner.myTurn && this.noOfStones > 0) {
 			this.neighbour.receive(this.noOfStones);
 			this.empty();
 		}
@@ -36,11 +36,18 @@ public class Bowl extends Kalaha {
 
 	@Override
 	void receive(int stones){
-		if(owner.myTurn & stones == 1 & isCurrentBowlEmpty()) this.steal();
+		if(owner.myTurn && stones == 1 && isCurrentBowlEmpty()) this.steal();
 		else {
 			this.noOfStones++;
-			passOn(--stones);
+			passOn(stones - 1);
 		}
+	}
+
+	@Override
+	void passOn(int stones){
+		if(stones > 0) neighbour.receive(stones);
+		else this.owner.changeTurn();
+		if(!checkContinueGame(this.findBowl(1))) tallyScores(this, this.neighbour);
 	}
 
 	private void empty() {
@@ -54,7 +61,7 @@ public class Bowl extends Kalaha {
 
 	Bowl stepToOppositeBowl(int steps, Bowl currentBowl) {
 		if(currentBowl.id != currentBowl.id + steps){
-			return currentBowl.stepToOppositeBowl(--steps, (Bowl) currentBowl.neighbour);
+			return currentBowl.stepToOppositeBowl(steps - 1, (Bowl) currentBowl.neighbour);
 		}
 		return currentBowl;
 	}

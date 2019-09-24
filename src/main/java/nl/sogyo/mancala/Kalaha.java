@@ -24,7 +24,7 @@ public class Kalaha {
 	}
 
 	Kalaha findBowl(int id) throws IndexOutOfBoundsException  {
-		if(id < 1 ^ id > 14){
+		if(id < 1 || id > 14){
 			return null;
 		}
 		Kalaha current = this;
@@ -56,14 +56,14 @@ public class Kalaha {
 	void receive(int stones){
 		if(this.owner.myTurn){
 			this.noOfStones++;
-			passOn(--stones);
+			passOn(stones - 1);
 		}
 		else passOn(stones);
 	}
 
 	void passOn(int stones){
-		if(stones > 0) neighbour.receive(stones);
-		else this.owner.changeTurn();
+		if(stones == 0 && this.owner.myTurn); //TODO How to indicate the player can make another move?
+		else neighbour.receive(stones);
 		if(!checkContinueGame(this.findBowl(1))) tallyScores(this, this.neighbour);
 	}
 
@@ -75,11 +75,11 @@ public class Kalaha {
 	}
 
 	private boolean assertPossibleMoves(Kalaha currentBowl, int count, boolean canPlay) {
-		if(count > 0 & !canPlay) {
+		if(count > 0 && !canPlay) {
 			canPlay = checkPlayableBowls(currentBowl);
-			return assertPossibleMoves(currentBowl.neighbour, --count, canPlay);
+			return assertPossibleMoves(currentBowl.neighbour, count - 1, canPlay);
 		}
-		else if(count == 0 & !canPlay) {
+		else if(count == 0 && !canPlay) {
 			return false;
 		}
 		return true;
