@@ -53,7 +53,7 @@
 
     <groupId>nl.sogyo.mancala</groupId>
     <artifactId>mancala</artifactId>
-    <version></version>
+    <version>-</version>
 
     <dependencies>
         <dependency>
