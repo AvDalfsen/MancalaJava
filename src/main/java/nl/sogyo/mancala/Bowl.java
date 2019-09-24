@@ -1,6 +1,6 @@
 package nl.sogyo.mancala;
 
-public class Bow extends Kalaha {
+public class Bowl extends Kalaha {
 	Bowl(Player player) {
 		super();
 		this.noOfStones = 4;
