@@ -50,6 +50,12 @@
 	</profiles>
     <modelVersion>4.0.0</modelVersion>
     <name>Mancala</name>
+
+    <groupId></groupId>
+    <artifactId></artifactId>
+    <version></version>
+	<packaging></packaging>
+
     <dependencies>
         <dependency>
             <groupId>junit</groupId>
