@@ -27,3 +27,5 @@ local.properties
 *.war
 *.ear
 /target/
+
+pom - Copy.xml
